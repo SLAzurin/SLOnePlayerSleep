@@ -1,0 +1,6 @@
+
+# Delay before turining to daytime after entering bed (in seconds)
+sleepdelay: 5
+
+# Delay before player can go back in bed after sleep was canceled (in seconds)
+sleepcooldownreset: 10

@@ -1,0 +1,28 @@
+name: SLOnePlayerSleep
+main: io.github.slazurin.sloneplayersleep.SLOnePlayerSleep
+version: 1.0.2
+author: Azurin
+api-version: 1.16
+
+commands:
+    cancelsleep:
+        description: Cancel player's sleep. Keeps on being night time
+        permission-message: You do not have permission to use this command.
+        usage: /cancelsleep
+    debuginfo:
+        description: Check api data for SLOnePlayerSleep
+        permission-message: You do not have permission to use this command.
+        usage: /debuginfo
+
+permissions:
+    slops.*:
+        default: op
+        children:
+            slops.cancelsleep: true
+            slops.debuginfo: true
+    slops.cancelsleep:
+        description: Allows player to use the /cancelsleep command
+        default: true
+    slops.debuginfo:
+        description: Check api data for SLOnePlayerSleep
+        default: op
