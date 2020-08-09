@@ -9,10 +9,12 @@ commands:
         description: Cancel player's sleep. Keeps on being night time
         permission-message: You do not have permission to use this command.
         usage: /cancelsleep
+        permission: slops.cancelsleep
     debuginfo:
         description: Check api data for SLOnePlayerSleep
         permission-message: You do not have permission to use this command.
         usage: /debuginfo
+        permission: slops.debuginfo
 
 permissions:
     slops.*:
