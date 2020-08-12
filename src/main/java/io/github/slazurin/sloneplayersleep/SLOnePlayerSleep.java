@@ -1,5 +1,6 @@
 package io.github.slazurin.sloneplayersleep;
 
+import io.github.slazurin.sloneplayersleep.listeners.SLOnePlayerSleepListeners;
 import io.github.slazurin.sloneplayersleep.api.SLOnePlayerSleepApi;
 import io.github.slazurin.sloneplayersleep.commands.CancelSleep;
 import io.github.slazurin.sloneplayersleep.commands.DebugInfo;

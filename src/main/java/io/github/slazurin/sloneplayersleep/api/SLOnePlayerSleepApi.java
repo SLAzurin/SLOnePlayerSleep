@@ -86,26 +86,26 @@ public class SLOnePlayerSleepApi {
     }
     
     public boolean cancelSleep(World w) {
+        boolean success = false;
+        
         if (this.isSleepCanceled()) {
             return false;
         }
         
-        if (!this.cancelSleepTask()) {
-            return false;
+        if (this.cancelSleepTask()) {
+            success = true;
         }
-        this.setSleepCanceled(true);
         
-        int sleepcooldownreset = this.plugin.getConfig().getInt("sleepcooldownreset", 10);
+        if (this.kickPlayersOffBed()) {
+            success = true;
+        }
         
-        this.setSleepCooldownResetTaskEndTime(w.getFullTime() + (sleepcooldownreset * 20));
+        if (success) {
+            this.setSleepCanceled(true);
+            this.startSleepCooldownResetTask(w);
+        }
         
-        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
-                this.setSleepCanceled(false);
-                this.setSleepCooldownResetTaskEndTime(-1);
-            }, sleepcooldownreset * 20);
-        
-        this.kickPlayersOffBed();
-        return true;
+        return success;
     }
 
     public long getSleepCooldownResetTaskEndTime() {
@@ -120,9 +120,11 @@ public class SLOnePlayerSleepApi {
         return (this.getSleepCooldownResetTaskEndTime() - w.getFullTime()) / 20 + 1;
     }
 
-    private void kickPlayersOffBed() {
+    private boolean kickPlayersOffBed() {
+        boolean kickPlayerOffBed = false;
         for (Player p : this.plugin.getServer().getOnlinePlayers()) {
             if (p.isSleeping()) {
+                kickPlayerOffBed = true;
                 GameMode oldGameMode = null;
                 if (p.getGameMode() != GameMode.SURVIVAL) {
                     oldGameMode = p.getGameMode();
@@ -134,5 +136,19 @@ public class SLOnePlayerSleepApi {
                 }
             }
         }
+        
+        return kickPlayerOffBed;
+    }
+
+    private void startSleepCooldownResetTask(World w) {
+        // Set timer to reset sleep cooldown
+        int sleepcooldownreset = this.plugin.getConfig().getInt("sleepcooldownreset", 10);
+
+        this.setSleepCooldownResetTaskEndTime(w.getFullTime() + (sleepcooldownreset * 20));
+
+        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
+                this.setSleepCanceled(false);
+                this.setSleepCooldownResetTaskEndTime(-1);
+            }, sleepcooldownreset * 20);
     }
 }

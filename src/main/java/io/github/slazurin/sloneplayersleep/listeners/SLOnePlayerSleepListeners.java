@@ -1,5 +1,6 @@
-package io.github.slazurin.sloneplayersleep;
+package io.github.slazurin.sloneplayersleep.listeners;
 
+import io.github.slazurin.sloneplayersleep.SLOnePlayerSleep;
 import io.github.slazurin.utils.WorldUtils;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -25,11 +26,12 @@ public class SLOnePlayerSleepListeners implements Listener {
     
     @EventHandler
     public void onPlayerBedEnterEvent(PlayerBedEnterEvent e) {
+        // Never use default behavior if SuperVanish is used in the server.
         // Only 1 person online, the one who entered the bed
-        if (this.plugin.getServer().getOnlinePlayers().size() == 1) {
-            //enable default behavior
-            return;
-        }
+        // if (this.plugin.getServer().getOnlinePlayers().size() == 1) {
+        //     // enable default behavior
+        //     return;
+        // }
         
         if (e.getBedEnterResult() != PlayerBedEnterEvent.BedEnterResult.OK) {
             // Player did not enter bed
@@ -39,23 +41,27 @@ public class SLOnePlayerSleepListeners implements Listener {
         if (this.plugin.getApi().isSleepCanceled()) {
             e.setCancelled(true);
             long cdresettime = this.plugin.getApi().getTimeUntilCanSleep(e.getPlayer().getWorld());
-            e.getPlayer().sendMessage("Please try again in " + cdresettime + " seconds");
+            e.getPlayer().sendMessage(ChatColor.RED + "Please try again in " + cdresettime + " seconds");
             return;
         }
         
         Player p = e.getPlayer();
         World world = p.getWorld();
+        int playerCount = this.plugin.getServer().getOnlinePlayers().size();
         
+        Bukkit.getServer().broadcast(this.getSleepMsg(p));
         
         if (WorldUtils.isNight(world)) {
-            Bukkit.getServer().broadcast(this.getSleepMsg(p));
-            this.plugin.getApi().startNightToDayTask(world);
+            if (playerCount != 1) {
+                this.plugin.getApi().startNightToDayTask(world);
+            }
             return;
         }
         
         if (world.isThundering()) {
-            Bukkit.getServer().broadcast(this.getSleepMsg(p));
-            this.plugin.getApi().startStopThunderingTask(world);
+            if (playerCount != 1) {
+                this.plugin.getApi().startStopThunderingTask(world);
+            }
         }
         
     }
@@ -85,7 +91,6 @@ public class SLOnePlayerSleepListeners implements Listener {
                 .append("]").color(ChatColor.WHITE).bold(false)
                 .event((HoverEvent)null)
                 .event((ClickEvent)null);
-        
         return fullMsg.create();
     }
     
