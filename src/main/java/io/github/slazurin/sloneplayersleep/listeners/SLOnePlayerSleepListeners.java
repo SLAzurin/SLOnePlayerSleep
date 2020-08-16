@@ -49,8 +49,7 @@ public class SLOnePlayerSleepListeners implements Listener {
         World world = p.getWorld();
         int playerCount = this.plugin.getServer().getOnlinePlayers().size();
         
-        Bukkit.getServer().broadcast(this.getSleepMsg(p));
-        
+        Bukkit.getServer().spigot().broadcast(this.getSleepMsg(p));
         if (WorldUtils.isNight(world)) {
             if (playerCount != 1) {
                 this.plugin.getApi().startNightToDayTask(world);
