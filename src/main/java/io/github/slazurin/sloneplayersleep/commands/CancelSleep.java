@@ -34,7 +34,7 @@ public class CancelSleep implements TabExecutor {
         
         
         if (this.plugin.getApi().cancelSleep(((Player) sender).getWorld())) {
-            this.plugin.getServer().broadcastMessage(ChatColor.RED + sender.getName() + " canceled sleep.");
+            this.plugin.getServer().sendMessage(net.kyori.adventure.text.Component.text(ChatColor.RED + sender.getName() + " canceled sleep."));
         }
         return true;
     }

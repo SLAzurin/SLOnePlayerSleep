@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -49,7 +51,7 @@ public class SLOnePlayerSleepListeners implements Listener {
         World world = p.getWorld();
         int playerCount = this.plugin.getServer().getOnlinePlayers().size();
         
-        Bukkit.getServer().spigot().broadcast(this.getSleepMsg(p));
+        Bukkit.getServer().sendMessage(BungeeComponentSerializer.get().deserialize(this.getSleepMsg(p)));
         if (WorldUtils.isNight(world)) {
             if (playerCount != 1) {
                 this.plugin.getApi().startNightToDayTask(world);
@@ -83,7 +85,7 @@ public class SLOnePlayerSleepListeners implements Listener {
         cancelButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text( "Cancel sleep" )));
             
         ComponentBuilder fullMsg = 
-                new ComponentBuilder(p.getDisplayName())
+                new ComponentBuilder(PlainComponentSerializer.plain().serialize(p.displayName()))
                 .color(ChatColor.WHITE).append(" is sleeping. ")
                 .color(ChatColor.YELLOW).append("[").color(ChatColor.WHITE)
                 .append(cancelButton)

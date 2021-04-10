@@ -21,7 +21,7 @@ public class SLOnePlayerSleep extends JavaPlugin {
     
     @Override
     public void onDisable() {
-        getLogger().info("Enabled SLOnePlayerSleep");
+        getLogger().info("Disabled SLOnePlayerSleep");
     }
     
     private void loadConfig() {
